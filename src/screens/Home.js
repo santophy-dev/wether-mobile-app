@@ -1,252 +1,134 @@
-import {useEffect, useState} from 'react';
-import {Image, Text, View} from 'react-native';
-import {deviceWidth} from './Dimensions';
-import {API_KEY} from './Constants';
+import React, { useEffect, useState } from "react";
+import { Image, Text, View } from "react-native";
+import { API_KEY } from "./Constants";
+import { styles } from "./styles";
 
-export default function Home(props) {
+export default function Home() {
   const [data, setData] = useState();
-  const [details, setDetails] = useState();
   const [foreCast, setForeCast] = useState();
 
-  console.log(foreCast?.list[1], 'here is the data of indore');
+  useEffect(() => {
+    fetchData("weather", setData);
+    fetchData("forecast", setForeCast);
+  }, []);
 
-  useEffect(() => {
+  const fetchData = (type, setDataFunction) => {
     fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${'Indore'}&appid=${API_KEY}`,
+      `https://api.openweathermap.org/data/2.5/${type}?q=${"Indore"}&appid=${API_KEY}`
     )
-      .then(res => res.json())
-      .then(res => setData(res))
-      .catch(err => console.log(err));
-  }, []);
-  useEffect(() => {
-    fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${'Indore'}&appid=${API_KEY}`,
-    )
-      .then(res => res.json())
-      .then(res => setForeCast(res))
-      .catch(err => console.log(err));
-  }, []);
-  const Data = ({title, value}) => (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-      <Text style={{color: 'white', fontSize: 16,padding:2}}>{title}</Text>
-      <Text style={{color: 'white', fontSize: 16,padding:2}}>{value}</Text>
-    </View>
-  );
+      .then((res) => res.json())
+      .then((res) => setDataFunction(res))
+      .catch((err) => console.log(err));
+  };
+
+  const renderForecast = () => {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+
+    if (!foreCast || !foreCast.list || foreCast.list.length === 0) {
+      return null;
+    }
+
+    return days.map((day, index) => (
+      <View key={index} style={{}}>
+        <Text style={styles.dayText}>{day.slice(0, 3)}</Text>
+        <Text style={styles.dayText}>
+          {foreCast?.list[index]?.main?.humidity} %
+        </Text>
+        <Text style={styles.dayText}>
+          {foreCast?.list[index]?.weather[0]?.main}
+        </Text>
+        <Text style={styles.dayText}>
+          {(foreCast?.list[index]?.main?.temp_min - 273).toFixed(0)} ° C
+        </Text>
+        <Text style={styles.dayText}>
+          {(foreCast?.list[index]?.main?.temp - 273).toFixed(0)} ° C
+        </Text>
+      </View>
+    ));
+  };
 
   return (
-    <View
-      style={{
-        backgroundColor: '#6F7378',
-        flex: 1,
-        paddingHorizontal: 10,
-        paddingTop: 30,
-      }}>
+    <View style={styles.container}>
       <View
         style={{
-          position: 'absolute',
+          position: "absolute",
           paddingVertical: 20,
           paddingHorizontal: 10,
           left: 120,
-        }}>
-        <View
-          style={{
-            marginTop: 50,
-          }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        }}
+      >
+        <View style={{ marginTop: 50 }}>
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
             <Image
-              source={require('../assets/images/cloud.png')}
-              style={{height: 100, width: 100, tintColor: 'white'}}
+              source={require("../assets/images/cloud.png")}
+              style={{ height: 100, width: 100, tintColor: "white" }}
             />
           </View>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{color: 'white', fontSize: 40}}>
-              {data?.name || 'Loading...'}
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <Text style={{ color: "white", fontSize: 40 }}>
+              {data?.name || "Loading..."}
             </Text>
-            <Text style={{color: 'white', fontSize: 64}}>
+            <Text style={{ color: "white", fontSize: 64 }}>
               {data
-                ? `${(data['main']['temp'] - 273).toFixed(0)}° C`
-                : 'Loading...'}
+                ? `${(data["main"]["temp"] - 273).toFixed(0)}° C`
+                : "Loading..."}
             </Text>
-            <Text style={{fontSize: 22, color: 'white', textAlign: 'center'}}>
-              {data ? data['weather'][0]['main'] : 'Loading...'}
+            <Text style={{ fontSize: 22, color: "white", textAlign: "center" }}>
+              {data ? data["weather"][0]["main"] : "Loading..."}
             </Text>
           </View>
         </View>
       </View>
 
-      <View style={{marginTop: 210}}>
+      <View style={{ marginTop: 210 }}>
         <View>
           <Text
             style={{
-              color: 'white',
+              color: "white",
               fontSize: 25,
               marginTop: 100,
               marginBottom: 20,
-              textAlign: 'center',
-            }}>
+              textAlign: "center",
+            }}
+          >
             7 Days Forecast
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            backgroundColor: '#000',
-            padding: 10,
-            borderRadius: 20,
-          }}>
-          <View>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              Sunday
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              Monday
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              Tuesday
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              Wednesday
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              Thursday
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              Friday
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              Satarday
-            </Text>
-          </View>
-          <View>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list?.[0]['main']['humidity']} %
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list?.[1]['main']['humidity']} %
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list?.[2]['main']['humidity']} %
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list?.[3]['main']['humidity']} %
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list?.[4]['main']['humidity']} %
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list?.[5]['main']['humidity']} %
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list?.[6]['main']['humidity']} %
-            </Text>
-          </View>
-          <View>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list[0].weather[0]['main']}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list[1].weather[0]['main']}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list[2].weather[0]['main']}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list[3].weather[0]['main']}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list[4].weather[0]['main']}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list[5].weather[0]['main']}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {foreCast?.list[6].weather[0]['main']}
-            </Text>
-          </View>
-          <View>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[0]['main']['temp_min'] - 273).toFixed(0)} ° C
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[1]['main']['temp_min'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[2]['main']['temp_min'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[3]['main']['temp_min'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[4]['main']['temp_min'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[5]['main']['temp_min'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[6]['main']['temp_min'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-          </View>
-          <View>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[0]['main']['temp'] - 273).toFixed(0)} ° C
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[1]['main']['temp'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[2]['main']['temp'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[3]['main']['temp'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[4]['main']['temp'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[5]['main']['temp'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-            <Text style={{paddingVertical: 8, fontSize: 16, color: 'white'}}>
-              {(foreCast?.list?.[6]['main']['temp'] - 273).toFixed(0)} ° C{' '}
-            </Text>
-          </View>
-        </View>
+        <View style={styles.forecastContainer}>{renderForecast()}</View>
       </View>
-      <View
-        style={{
-          marginTop: 680,
-          position: 'absolute',
-          left: 10,
-          backgroundColor: '#000',
-          padding: 15,
-          borderRadius: 20,
-          paddingBottom: 20,
-        }}>
-        <Text style={{color: 'white', fontSize: 22, marginBottom: 16}}>
-          Weather Details
+      <View style={styles.weatherDetails}>
+        <Text style={{ fontSize: 14, color: "white", alignSelf: "center" }}>
+          Wheather Details
         </Text>
-        <View style={{width: deviceWidth - 50}}>
-          <Data
-            value={data ? data['wind']['speed'] : 'Loading..'}
-            title="Wind"
-          />
-          <Data
-            value={data ? data['main']['pressure'] : 'Loading..'}
-            title="Pressure"
-          />
-          <Data
-            value={`${data ? data['main']['humidity'] : 'Loading..'}%`}
-            title="Humidity"
-          />
-          <Data
-            value={data ? data['visibility'] : 'Loading..'}
-            title="Visibility"
-          />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View>
+            <Text style={{ fontSize: 14, color: "white" }}>Wind:</Text>
+            <Text style={{ fontSize: 14, color: "white" }}>Pressure:</Text>
+            <Text style={{ fontSize: 14, color: "white" }}>Humidity:</Text>
+            <Text style={{ fontSize: 14, color: "white" }}>Visibility:</Text>
+          </View>
+          <View>
+            <Text style={{ fontSize: 14, color: "white" }}>
+              {data ? data["wind"]["speed"] : "Loading.."}
+            </Text>
+            <Text style={{ fontSize: 14, color: "white" }}>
+              {data ? data["main"]["pressure"] : "Loading.."}
+            </Text>
+            <Text style={{ fontSize: 14, color: "white" }}>
+              {data ? `${data["main"]["humidity"]}%` : "Loading.."}
+            </Text>
+            <Text style={{ fontSize: 14, color: "white" }}>
+              {data ? data["visibility"] : "Loading.."}
+            </Text>
+          </View>
         </View>
       </View>
     </View>
