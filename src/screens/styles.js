@@ -29,4 +29,59 @@ export const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
   },
+  innerContainer: {
+    marginTop: 50,
+  },
+  imageStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cloudImage: {
+    height: 100,
+    width: 100,
+    tintColor: "white",
+  },
+  nameStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  nameTextStyle: {
+    color: "white",
+    fontSize: 40,
+  },
+  tempStyle: {
+    color: "white",
+    fontSize: 64,
+  },
+  wetherStyle: {
+    fontSize: 22,
+    color: "white",
+    textAlign: "center",
+  },
+  mainContainer: {
+    position: "absolute",
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    left: 120,
+  },
+  headingStyle: {
+    color: "white",
+    fontSize: 25,
+    marginTop: 100,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  wetherHeader: {
+    fontSize: 14,
+    color: "white",
+    alignSelf: "center",
+  },
+  textView: {
+    fontSize: 14,
+    color: "white",
+  },
+  lowerText: {
+    fontSize: 14,
+    color: "white",
+  },
 });

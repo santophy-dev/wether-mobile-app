@@ -57,31 +57,24 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          position: "absolute",
-          paddingVertical: 20,
-          paddingHorizontal: 10,
-          left: 120,
-        }}
-      >
-        <View style={{ marginTop: 50 }}>
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.mainContainer}>
+        <View style={styles.innerContainer}>
+          <View style={styles.imageStyle}>
             <Image
               source={require("../assets/images/cloud.png")}
-              style={{ height: 100, width: 100, tintColor: "white" }}
+              style={styles.cloudImage}
             />
           </View>
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <Text style={{ color: "white", fontSize: 40 }}>
+          <View style={styles.nameStyle}>
+            <Text style={styles.nameTextStyle}>
               {data?.name || "Loading..."}
             </Text>
-            <Text style={{ color: "white", fontSize: 64 }}>
+            <Text style={styles.tempStyle}>
               {data
                 ? `${(data["main"]["temp"] - 273).toFixed(0)}° C`
                 : "Loading..."}
             </Text>
-            <Text style={{ fontSize: 22, color: "white", textAlign: "center" }}>
+            <Text style={styles.wetherStyle}>
               {data ? data["weather"][0]["main"] : "Loading..."}
             </Text>
           </View>
@@ -90,42 +83,30 @@ export default function Home() {
 
       <View style={{ marginTop: 210 }}>
         <View>
-          <Text
-            style={{
-              color: "white",
-              fontSize: 25,
-              marginTop: 100,
-              marginBottom: 20,
-              textAlign: "center",
-            }}
-          >
-            7 Days Forecast
-          </Text>
+          <Text style={styles.headingStyle}>7 Days Forecast</Text>
         </View>
         <View style={styles.forecastContainer}>{renderForecast()}</View>
       </View>
       <View style={styles.weatherDetails}>
-        <Text style={{ fontSize: 14, color: "white", alignSelf: "center" }}>
-          Wheather Details
-        </Text>
+        <Text style={styles.wetherHeader}>Wheather Details</Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
-            <Text style={{ fontSize: 14, color: "white" }}>Wind:</Text>
-            <Text style={{ fontSize: 14, color: "white" }}>Pressure:</Text>
-            <Text style={{ fontSize: 14, color: "white" }}>Humidity:</Text>
-            <Text style={{ fontSize: 14, color: "white" }}>Visibility:</Text>
+            <Text style={styles.textView}>Wind:</Text>
+            <Text style={styles.textView}>Pressure:</Text>
+            <Text style={styles.textView}>Humidity:</Text>
+            <Text style={styles.textView}>Visibility:</Text>
           </View>
           <View>
-            <Text style={{ fontSize: 14, color: "white" }}>
+            <Text style={styles.lowerText}>
               {data ? data["wind"]["speed"] : "Loading.."}
             </Text>
-            <Text style={{ fontSize: 14, color: "white" }}>
+            <Text style={styles.lowerText}>
               {data ? data["main"]["pressure"] : "Loading.."}
             </Text>
-            <Text style={{ fontSize: 14, color: "white" }}>
+            <Text style={styles.lowerText}>
               {data ? `${data["main"]["humidity"]}%` : "Loading.."}
             </Text>
-            <Text style={{ fontSize: 14, color: "white" }}>
+            <Text style={styles.lowerText}>
               {data ? data["visibility"] : "Loading.."}
             </Text>
           </View>
